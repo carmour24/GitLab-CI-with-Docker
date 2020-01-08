@@ -20,6 +20,8 @@ To get started:
 			--executor docker \
 			-u http://gitlab \
 			-r [runner registration token] \
+			--docker-privileged \
+			--docker-volumes "/certs/client"
 			--docker-network-mode gitlab-ci-with-docker_docknet \
 			--run-untagged
 
