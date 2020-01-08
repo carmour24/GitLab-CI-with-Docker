@@ -20,8 +20,10 @@ To get started:
 			--executor docker \
 			-u http://gitlab \
 			-r [runner registration token] \
-			--docker-network-mode gitlab-ci-example_docknet \
+			--docker-network-mode gitlab-ci-with-docker_docknet \
 			--run-untagged
+
+NB: if you clone the repo at a different location from the default you will need to check the network created and update the `--docker-network-mode` value with that network name.
 
 Now gitlab is configured and the runner is ready to go we can go ahead and add some content to our project. Go to ./repo in your shell and add the contents to the GitLab repo. You'll be prompted to enter a username and password. Use root and the password you specified originally:
 
