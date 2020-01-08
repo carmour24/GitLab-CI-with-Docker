@@ -14,7 +14,7 @@ To get started:
 1. Expand the runners section, find the "Set up a specific Runner manually" and copy the runner registration token displayed.
 1. Next run the following command to register the runner non-interactively. Replace "[runner registration token] with the token from the previous step. This will register the docker runner and allow it to run untagged builds:
 
-	      docker-compose exec gitlab-runner gitlab-runner register \
+	   docker-compose exec gitlab-runner gitlab-runner register \
 		-n \
 		--docker-image alpine:latest \
 		--executor docker \
