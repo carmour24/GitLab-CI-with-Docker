@@ -29,7 +29,7 @@ Now gitlab is configured and the runner is ready to go we can go ahead and add s
 1. `git remote add origin http://localhost:1480/root/demo.git`
 1. `git add .`
 1. `git commit -m "Initial commit"`
-1. `git push -u origin master`d
+1. `git push -u origin master`
 
 TODO: Docker build is failing probably due to certs  
 TODO: Add TestContainers and Cypress tests
