@@ -31,7 +31,7 @@ Now gitlab is configured and the runner is ready to go we can go ahead and add s
 1. `git commit -m "Initial commit"`
 1. `git push -u origin master`d
 
-TODO: Docker build is failing probably due to certs
+TODO: Docker build is failing probably due to certs  
 TODO: Add TestContainers and Cypress tests
 
 Test docker run -p 8080:8080 demo
