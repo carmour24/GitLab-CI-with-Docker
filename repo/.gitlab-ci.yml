@@ -3,30 +3,45 @@ stages:
   - post-build
   - test
 
+
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
+  DOCKER_HOST: tcp://dind:2375
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_NETWORK_MODE: docknet
   # DOCKER_HOST: tcp://docker:2376
-  #DOCKER_TLS_CERTDIR: "/certs"
+  # DOCKER_TLS_CERTDIR: "/certs"
 
 build:gradle:
   image: gradle:jdk13
   stage: build
   script:
-    - gradle build
+    - gradle -g "$CI_PROJECT_DIR/gradle-cache" build
   artifacts:
     paths:
       - build/libs/demo-0.0.1-SNAPSHOT.jar
     untracked: false
     expire_in: 30 days
+  cache:
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - gradle-cache/
 
 build:docker:
-  services:
-    - docker:19.03.1-dind
-  image: docker:19.03.1
+# services:
+#     - name: docker:dind
+#       alias: dind
+  image: docker:latest
   stage: post-build
   script:
-    #- docker --tlsverify build -f src/main/docker/Dockerfile . -t demo
-    - docker build -f src/main/docker/Dockerfile . -t demo
+    - docker build -f src/main/docker/Dockerfile build/libs -t demo
+    - docker image save -o image.tar demo:latest 
+    - gzip image.tar
+    - ls
+  artifacts:
+    paths:
+      - image.tar.gz
+    untracked: false
+    expire_in: 30 days
   dependencies:
     - build:gradle

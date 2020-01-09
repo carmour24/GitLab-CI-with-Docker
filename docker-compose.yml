@@ -29,23 +29,11 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab'
-        # docker:
-        #   image: docker:19.03.1-dind
-        #   privileged: true
-        #   ports:
-        #     - 2376:2376
-        #   networks: 
-        #     - docknet
-        #   volumes:
-        #     - certs-ca:/certs/ca
-        #     - certs-client:/certs/client
-        #   environment:
-        #     - DOCKER_TLS_CERTDIR=/certs
-    
 
 networks:
   docknet:
     driver: bridge
+    name: docknet
 
 volumes:
   certs-ca:
