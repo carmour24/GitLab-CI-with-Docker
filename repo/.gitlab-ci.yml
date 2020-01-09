@@ -8,7 +8,6 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://dind:2375
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_NETWORK_MODE: docknet
   # DOCKER_HOST: tcp://docker:2376
   # DOCKER_TLS_CERTDIR: "/certs"
 
@@ -28,10 +27,10 @@ build:gradle:
       - gradle-cache/
 
 build:docker:
-# services:
-#     - name: docker:dind
-#       alias: dind
-  image: docker:latest
+  services:
+    - name: docker:19.03.1-dind
+      alias: dind
+  image: docker:19.03.1
   stage: post-build
   script:
     - docker build -f src/main/docker/Dockerfile build/libs -t demo
