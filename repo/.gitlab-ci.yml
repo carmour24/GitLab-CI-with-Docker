@@ -5,7 +5,8 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
+  DOCKER_HOST: tcp://dind:2375
+  DOCKER_TLS_CERTDIR: ""
   # DOCKER_HOST: tcp://docker:2376
   #DOCKER_TLS_CERTDIR: "/certs"
 
@@ -22,7 +23,8 @@ build:gradle:
 
 build:docker:
   services:
-    - docker:19.03.1-dind
+    - name: docker:19.03.1-dind
+      alias: dind
   image: docker:19.03.1
   stage: post-build
   script:
