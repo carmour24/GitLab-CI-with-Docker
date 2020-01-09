@@ -6,7 +6,7 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://dind:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: ""
   # DOCKER_HOST: tcp://docker:2376
   # DOCKER_TLS_CERTDIR: "/certs"
@@ -28,13 +28,14 @@ build:gradle:
 
 build:docker:
   services:
+    - postgres:latest
     - name: docker:19.03.1-dind
       alias: dind
   image: docker:19.03.1
   stage: post-build
   script:
-    - docker build -f src/main/docker/Dockerfile build/libs -t demo
-    - docker image save -o image.tar demo:latest 
+    - DOCKER_HOST=$(hostname -i) docker build -f src/main/docker/Dockerfile build/libs -t demo
+    - DOCKER_HOST=$(hostname -i) docker image save -o image.tar demo:latest 
     - gzip image.tar
     - ls
   artifacts:
