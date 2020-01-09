@@ -6,8 +6,9 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375
+  DOCKER_HOST: tcp://dind:2375
   DOCKER_TLS_CERTDIR: ""
+  DOCKER_NETWORK_MODE: "docknet"
   # DOCKER_HOST: tcp://docker:2376
   # DOCKER_TLS_CERTDIR: "/certs"
 
@@ -34,8 +35,8 @@ build:docker:
   image: docker:19.03.1
   stage: post-build
   script:
-    - DOCKER_HOST=$(hostname -i) docker build -f src/main/docker/Dockerfile build/libs -t demo
-    - DOCKER_HOST=$(hostname -i) docker image save -o image.tar demo:latest 
+    - docker build -f src/main/docker/Dockerfile build/libs -t demo
+    - docker image save -o image.tar demo:latest 
     - gzip image.tar
     - ls
   artifacts:
