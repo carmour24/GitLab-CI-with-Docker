@@ -19,11 +19,11 @@ To get started:
 			--docker-image alpine:latest \
 			--executor docker \
 			-u http://gitlab \
-			-r [runner registration token] \
 			--docker-privileged \
 			--docker-volumes "/certs/client" \
 			--docker-network-mode docknet \
-			--run-untagged
+			--run-untagged \
+			-r [runner registration token]
 
 Now gitlab is configured and the runner is ready to go we can go ahead and add some content to our project. Go to ./repo in your shell and add the contents to the GitLab repo. You'll be prompted to enter a username and password. Use root and the password you specified originally:
 
