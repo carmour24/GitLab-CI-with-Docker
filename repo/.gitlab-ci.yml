@@ -3,14 +3,14 @@ stages:
   - post-build
   - test
 
-
 variables:
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://dind:2375
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_NETWORK_MODE: docknet
-  # DOCKER_HOST: tcp://docker:2376
-  # DOCKER_TLS_CERTDIR: "/certs"
+  # DOCKER_NETWORK_MODE: docknet
+  DOCKER_HOST: tcp://docker:2376
+  # DOCKER_HOST: tcp://dind:2375
+  # DOCKER_TLS_CERTDIR: ""
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: "true"
 
 build:gradle:
   image: gradle:jdk13
@@ -28,41 +28,54 @@ build:gradle:
       - gradle-cache/
 
 # build:docker:
-#   services:
-#     - name: docker:18.09.7-dind
-#       alias: dind
-#       #image: docker:19.03.1-dind
-#   image: docker:18.09.7
-#   stage: post-build
-#   before_script:
-#     - dockerd-entrypoint.sh &
-#   script:
-#     - while ! nc -z localhost 2375; do sleep 1; done;
-#     - docker build -f src/main/docker/Dockerfile build/libs -t demo
-#     - docker image save -o image.tar demo:latest 
-#     - gzip image.tar
-#   artifacts:
-#     paths:
-#       - image.tar.gz
-#     untracked: false
-#     expire_in: 30 days
-#   dependencies:
-#     - build:gradle
+#    image: docker:dind
+#    stage: post-build
+#    before_script:
+#      - dockerd-entrypoint.sh &
+#    script:
+#      - while ! nc -z localhost 2376; do sleep 1; done;
+#      - DOCKER_HOST=
+#      - docker build -f src/main/docker/Dockerfile build/libs -t demo
+#      - docker image save -o image.tar demo:latest 
+#      - gzip image.tar
+#    artifacts:
+#      paths:
+#        - image.tar.gz
+#      untracked: false
+#      expire_in: 30 days
+#    dependencies:
+#      - build:gradle
+# 
+# test:cypress:
+#    image: docker:dind
+#    stage: test
+#    before_script:
+#      - dockerd-entrypoint.sh &
+#    dependencies:
+#      - build:docker
+#    script:
+#      - gunzip image.tar.gz
+#      - while ! nc -z localhost 2376; do sleep 1; done;
+#      - DOCKER_HOST=
+#      - docker image load -i image.tar
+#      - docker run --network testnet -p 8080:8080 demo:latest
+#      - docker run --network testnet -v $PWD:/e2e -w /e2e cypress/included:3.2.0
 
 build:docker:
   services:
-    - name: docker:18.09.7-dind
+    # - postgres:latest
+    - name: docker:dind
       alias: dind
-  image: docker:18.09.7
+  image: docker:latest
   stage: post-build
   script:
     - docker build -f src/main/docker/Dockerfile build/libs -t demo
-    - docker image save -o image.tar demo:latest 
-    - gzip image.tar
-  artifacts:
-    paths:
-      - image.tar.gz
-    untracked: false
-    expire_in: 30 days
+    # - docker image save -o image.tar demo:latest 
+    # - gzip image.tar
+    # artifacts:
+    #   paths:
+    #     - image.tar.gz
+    #   untracked: false
+    #   expire_in: 30 days
   dependencies:
     - build:gradle
