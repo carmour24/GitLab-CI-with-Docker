@@ -5,77 +5,60 @@ stages:
 
 variables:
   DOCKER_DRIVER: overlay2
-  # DOCKER_NETWORK_MODE: docknet
-  DOCKER_HOST: tcp://docker:2376
-  # DOCKER_HOST: tcp://dind:2375
-  # DOCKER_TLS_CERTDIR: ""
-  DOCKER_TLS_CERTDIR: "/certs"
-  DOCKER_TLS_VERIFY: "true"
+  DOCKER_NETWORK_MODE: docknet
+  DOCKER_TLS_CERTDIR: ""
 
 build:gradle:
   image: gradle:jdk13
   stage: build
   script:
-    - gradle -g "$CI_PROJECT_DIR/gradle-cache" build
+    - gradle -g "$CI_PROJECT_DIR/gradle-cache" build -x test
   artifacts:
     paths:
       - build/libs/demo-0.0.1-SNAPSHOT.jar
     untracked: false
     expire_in: 30 days
   cache:
-    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    key: "$CI_COMMIT_REF_SLUG"
     paths:
       - gradle-cache/
 
-# build:docker:
-#    image: docker:dind
-#    stage: post-build
-#    before_script:
-#      - dockerd-entrypoint.sh &
-#    script:
-#      - while ! nc -z localhost 2376; do sleep 1; done;
-#      - DOCKER_HOST=
-#      - docker build -f src/main/docker/Dockerfile build/libs -t demo
-#      - docker image save -o image.tar demo:latest 
-#      - gzip image.tar
-#    artifacts:
-#      paths:
-#        - image.tar.gz
-#      untracked: false
-#      expire_in: 30 days
-#    dependencies:
-#      - build:gradle
-# 
-# test:cypress:
-#    image: docker:dind
-#    stage: test
-#    before_script:
-#      - dockerd-entrypoint.sh &
-#    dependencies:
-#      - build:docker
-#    script:
-#      - gunzip image.tar.gz
-#      - while ! nc -z localhost 2376; do sleep 1; done;
-#      - DOCKER_HOST=
-#      - docker image load -i image.tar
-#      - docker run --network testnet -p 8080:8080 demo:latest
-#      - docker run --network testnet -v $PWD:/e2e -w /e2e cypress/included:3.2.0
 
 build:docker:
   services:
-    # - postgres:latest
-    - name: docker:dind
-      alias: dind
-  image: docker:latest
+    - name: docker:19.03-dind
+  image: docker:19.03
   stage: post-build
   script:
-    - docker build -f src/main/docker/Dockerfile build/libs -t demo
-    # - docker image save -o image.tar demo:latest 
-    # - gzip image.tar
-    # artifacts:
-    #   paths:
-    #     - image.tar.gz
-    #   untracked: false
-    #   expire_in: 30 days
+    # Docker hostname is not available at the docker hostname as per the gitlab CI docs but we can calculate the hostname for the docker host from running the hostname command here and adding the appropriate suffix. See https://gitlab.com/gitlab-org/gitlab-runner/issues/1592#note_20419404 for original post. We add -0 on the end because this is part of a network created by docker compose on a mac. If this doesn't work for you then try removing the -0. Also, note that the docker image doesn't think it's running at this location so the TLS certificates it generates will not be valid. Therefore we have to disable TLS by setting DOCKER_TLS_CERTDIR to an empty string.
+    - DOCKER_HOST="tcp://${HOSTNAME}-docker-0:2375"
+    - docker build -f src/main/docker/Dockerfile  build/libs -t demo
+    - docker image save -o image.tar demo:latest 
+    - gzip image.tar
+  artifacts:
+      paths:
+        - image.tar.gz
+      untracked: false
+      expire_in: 30 days
   dependencies:
     - build:gradle
+
+test:cypress:
+  services:
+    - name: docker:19.03-dind
+  image: gradle:jdk13
+  stage: test
+  artifacts:
+     when: always
+     paths:
+       - src/test/e2e/cypress/videos
+     untracked: false
+     expire_in: 30 days
+  script:
+    - DOCKER_HOST="tcp://${HOSTNAME}-docker-0:2375"
+    - gradle -g "$CI_PROJECT_DIR/gradle-cache" test --info
+    - ls **
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - gradle-cache/
