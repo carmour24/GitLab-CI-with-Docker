@@ -35,4 +35,8 @@ Now gitlab is configured and the runner is ready to go we can go ahead and add s
 
 Adding this directory to your gitlab repo will kick off a new build. Check it out in Pipelines section under CI/CD in the GitLab project. You should see 3 stages in the pipeline that has been started. The first two stages should succeed but the third should fail. You can check out a video of the failure in Cypress by navigating into the step and choosing to download or browse the artifacts for that stage. 
 
+Below is an image displaying which containers are involved, what runs on them and how they interact. This doesn't attempt to show which stages run what in there entirety but that should be pretty obvious from the content of .gitlab-ci.yml. 
+
 ![Architecture](architecture.png)
+
+In production systems GitLab should be running on a separate host, TLS should really be enabled for the Docker communication and before you decide to use docker in docker in your build process read this article: https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/ if you're just using it to build images then [Kaniko](https://github.com/GoogleContainerTools/kaniko) or similar should perhaps be considered instead. Obviously there are many other considerations but those are outside the scope of this example.
