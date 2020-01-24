@@ -1,18 +1,18 @@
-This repository is intended to demonstrate how to set up GitLab CI in a Docker environment. This includes configuring the GitLab Docker runner to provision containers for the build process, the use of Docker in Docker (DinD) to generate a Docker image including build artefacts from a previous build stage and the use of TestContainers running in DinD for testing purposes.
+This repository is intended to demonstrate how to set up GitLab CI in a Docker environment. This includes configuring the GitLab Docker runner to provision containers for the build process, the use of Docker in Docker (DinD) to generate a Docker image including build artefacts from a previous build stage and the use of TestContainers running a Cypress container in DinD for testing purposes. The videos and reports of the test runs created by Cypress, are made available as artifacts of the build process also.
 
-We will configure a specific runner for a project we will create.
+We will configure a specific runner for a project we will create in the GitLab git repo.
 
 To get started:
 
 1. Clone the repo to your local machine. 
 1. Delete the .git folder as we'll be adding a subdirectory to a local GitLab instance hosted in Docker.
-1. Run `docker-compose up -d` to get Gitlab and the Gitlab Docker runner started. Once gitlab is reporting as "Up (health)" you can continue.
+1. Run `docker-compose up -d` to get Gitlab and the Gitlab Docker runner started. Once gitlab is reporting as "Up (healthy)" you can continue. Use `docker-compose ps` to check for service health.
 1. Navigate to the gitlab instance at http://localhost:1480 and create a password for root.
 1. Log in with root and the password you used in the previous step and create a project.
 1. Register the runner with the Gitlab server:
-1. Navigate into the project then into Settings -> CI/CD.
-1. Expand the runners section, find the "Set up a specific Runner manually" and copy the runner registration token displayed.
-1. Next run the following command to register the runner non-interactively. Replace "[runner registration token] with the token from the previous step. This will register the docker runner and allow it to run untagged builds:
+  1. Navigate into the project then into Settings -> CI/CD.
+  1. Expand the runners section, find the "Set up a specific Runner manually" and copy the runner registration token displayed.
+  1. Next, from the terminal, run the following command to register the runner non-interactively. Replace "[runner registration token] with the token from the previous step. This will register the docker runner and allow it to run untagged builds:
 
 	   docker-compose exec gitlab-runner gitlab-runner register \
 			-n \

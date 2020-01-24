@@ -5,10 +5,9 @@ it('should contain welcome message', () => {
     .should('contain', 'It worked!')
 })
 
-
-  /*it('should fail', () => {
+  it('should fail', () => {
   cy.visit('/')
 
   cy.get('body')
     .should('contain', 'It failed!')
-})*/
+})
