@@ -1,0 +1,14 @@
+repo/.gradle
+repo/build/
+
+# Ignore Gradle GUI config
+repo/gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!repo/gradle-wrapper.jar
+
+# Cache of project
+repo/.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
