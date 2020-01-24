@@ -51,8 +51,7 @@ test:cypress:
      untracked: false
      expire_in: 30 days
   script:
-    - DOCKER_HOST="tcp://${HOSTNAME}-docker-0:2375"
-    - gradle -g "$CI_PROJECT_DIR/gradle-cache" test --info
+    - DOCKER_HOST="tcp://${HOSTNAME}-docker-0:2375" gradle -g "$CI_PROJECT_DIR/gradle-cache" test --info
     - ls **
   cache:
     key: "$CI_COMMIT_REF_SLUG"
