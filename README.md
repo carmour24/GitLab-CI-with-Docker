@@ -35,3 +35,4 @@ Now gitlab is configured and the runner is ready to go we can go ahead and add s
 
 Adding this directory to your gitlab repo will kick off a new build. Check it out in Pipelines section under CI/CD in the GitLab project. You should see 3 stages in the pipeline that has been started. The first two stages should succeed but the third should fail. You can check out a video of the failure in Cypress by navigating into the step and choosing to download or browse the artifacts for that stage. 
 
+![Architecture](architecture.png)
