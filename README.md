@@ -1,4 +1,4 @@
-This repository is intended to demonstrate how to set up GitLab CI in a Docker environment. This includes configuring the GitLab Docker runner to provision containers for the build process, the use of Docker in Docker (DinD) to generate a Docker image including build artefacts from a previous build stage and the use of TestContainers running a Cypress container in DinD for testing purposes. The videos and reports of the test runs created by Cypress, are made available as artifacts of the build process also.
+This repository is intended to demonstrate how to set up GitLab CI in a Docker environment. This includes configuring the GitLab Docker runner to provision containers for the build process, the use of Docker in Docker (DinD) to generate a Docker image including build artefacts from a previous build stage and the use of TestContainers running a Cypress container in DinD for testing purposes. The videos and screenshots of the test runs created by Cypress are made available as artifacts of the build process also.
 
 We will configure a specific runner for a project we will create in the GitLab git repo.
 
@@ -14,15 +14,14 @@ To get started:
   1. Expand the runners section, find "Set up a specific Runner manually" and copy the runner registration token displayed.
   1. Next, from the terminal, run the following command to register the runner non-interactively. Replace "[runner registration token]" with the token copied in the previous step. This will register the docker runner and allow it to run untagged builds:
 
-	   docker-compose exec gitlab-runner gitlab-runner register \
-			-n \
-			--docker-image alpine:latest \
-			--executor docker \
-			-u http://gitlab \
-			--docker-privileged \
-			--docker-volumes "/certs/client" \
-			--docker-network-mode docknet \
-			--run-untagged \
+	   docker-compose exec gitlab-runner gitlab-runner register \\  
+			-n \\  
+			--docker-image alpine:latest \\  
+			--executor docker \\  
+			-u http://gitlab \\  
+			--docker-privileged \\  
+			--docker-network-mode docknet \\  
+			--run-untagged \\  
 			-r [runner registration token]
 
 Now gitlab is configured and the runner is ready to go we can go ahead and add some content to our project. Go to ./repo in your shell and add the contents to the GitLab repo. You'll be prompted to enter a username and password. Use root and the password you specified originally:
@@ -33,6 +32,6 @@ Now gitlab is configured and the runner is ready to go we can go ahead and add s
 1. `git commit -m "Initial commit"`
 1. `git push -u origin master`
 
-Test docker run -p 8080:8080 demo
 
-TODO: Ensure video artifacts are stored for failing tests.
+Adding this directory to your gitlab repo will kick off a new build. Check it out in Pipelines section under CI/CD in the GitLab project. You should see 3 stages in the pipeline that has been started. The first two stages should succeed but the third should fail. You can check out a video of the failure in Cypress by navigating into the step and choosing to download or browse the artifacts for that stage. 
+
