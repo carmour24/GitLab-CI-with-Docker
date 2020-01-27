@@ -1,6 +1,6 @@
 This repository is intended to demonstrate how to set up GitLab CI in a Docker environment. This includes configuring the GitLab Docker runner to provision containers for the build process, the use of Docker in Docker (DinD) to generate a Docker image including build artefacts from a previous build stage and the use of TestContainers running a Cypress container in DinD for testing purposes. The videos and screenshots of the test runs created by Cypress are made available as artifacts of the build process also.
 
-We will configure a specific runner for a project we will create in the GitLab git repo.
+We will configure a specific runner for a project we will create in the GitLab git repo. Group or shared runners are just as easily configured, it's just a matter of getting the appropriate token from somewhere else in GitLab.
 
 To get started:
 
