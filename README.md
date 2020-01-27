@@ -9,9 +9,9 @@ To get started:
 1. Navigate to the gitlab instance at http://localhost:1480 and create a password for root.
 1. Log in with root and the password you used in the previous step and create a project.
 1. Register the runner with the Gitlab server:
-  1. Navigate into the project then into Settings -> CI/CD.
-  1. Expand the runners section, find "Set up a specific Runner manually" and copy the runner registration token displayed.
-  1. Next, from the terminal, run the following command to register the runner non-interactively. Replace "[runner registration token]" with the token copied in the previous step. This will register the docker runner and allow it to run untagged builds:
+  a. Navigate into the project then into Settings -> CI/CD.
+  a. Expand the runners section, find "Set up a specific Runner manually" and copy the runner registration token displayed.
+  a. Next, from the terminal, run the following command to register the runner non-interactively. Replace "[runner registration token]" with the token copied in the previous step. This will register the docker runner and allow it to run untagged builds:
 
 	   docker-compose exec gitlab-runner gitlab-runner register \\  
 			-n \\  
