@@ -5,7 +5,6 @@ We will configure a specific runner for a project we will create in the GitLab g
 To get started:
 
 1. Clone the repo to your local machine. 
-1. Delete the .git folder as we'll be adding a subdirectory to a local GitLab instance hosted in Docker.
 1. Run `docker-compose up -d` to get Gitlab and the Gitlab Docker runner started. Once gitlab is reporting as "Up (healthy)" you can continue. Use `docker-compose ps` to check for service health.
 1. Navigate to the gitlab instance at http://localhost:1480 and create a password for root.
 1. Log in with root and the password you used in the previous step and create a project.
