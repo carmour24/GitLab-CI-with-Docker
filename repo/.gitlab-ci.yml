@@ -48,6 +48,7 @@ test:cypress:
      when: always
      paths:
        - src/test/e2e/cypress/videos
+       - src/test/e2e/cypress/screenshots
      untracked: false
      expire_in: 30 days
   script:

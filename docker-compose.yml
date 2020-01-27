@@ -4,15 +4,11 @@ version: '3.7'
 services:
   gitlab-runner:
     image: gitlab/gitlab-runner:latest
-    # network_mode: bridge
     networks: 
       - docknet
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - gitlab-runner-config:/etc/gitlab-runner
-      # - certs-ca:/certs/ca
-      # - certs-client:/certs/client
-      - certs:/certs
     depends_on:
       - gitlab
     links:
@@ -22,7 +18,6 @@ services:
   gitlab:
     networks:
       - docknet
-      # network_mode: bridge
     image: store/gitlab/gitlab-ce:11.10.4-ce.0
     ports:
       - '1443:443'
@@ -32,9 +27,6 @@ services:
       - gitlab-data:/var/opt/gitlab
       - gitlab-log:/var/log/gitlab
       - gitlab-config:/etc/gitlab
-      # - certs:/certs
-      # - certs-ca:/certs/ca
-      # - certs-client:/certs/client
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab'
@@ -45,9 +37,6 @@ networks:
       name: docknet
 
 volumes:
-  certs:
-  certs-ca:
-  certs-client:
   gitlab-runner-config:
   gitlab-config:
   gitlab-data:
