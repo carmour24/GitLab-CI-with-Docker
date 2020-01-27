@@ -23,7 +23,7 @@ To get started:
 			--run-untagged \\  
 			-r [runner registration token]
 
-Now gitlab is configured and the runner is ready to go we can go ahead and add some content to our project. Go to ./repo in your shell and add the contents to the GitLab repo. You'll be prompted to enter a username and password. Use root and the password you specified originally:
+The GitLab runner is now registered so we can add some content to our project. Go to ./repo in your shell and add the contents to the GitLab repo. You'll be prompted to enter a username and password. Use root and the password you specified originally:
 
 1. `git init`
 1. `git remote add origin http://localhost:1480/root/demo.git`
