@@ -1,14 +1,16 @@
-
+# Define custom build stages
 stages: 
   - build
   - post-build
   - test
 
+# Specify some variables for Docker to prevent TLS and speed up builds.
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_NETWORK_MODE: docknet
   DOCKER_TLS_CERTDIR: ""
 
+# Basic gradle build
 build:gradle:
   image: gradle:jdk13
   stage: build
@@ -24,19 +26,20 @@ build:gradle:
     paths:
       - gradle-cache/
 
-
+# Use Docker in docker to create a docker image
 build:docker:
   services:
     - name: docker:19.03-dind
   image: docker:19.03
   stage: post-build
   script:
-    # Docker hostname is not available at the docker hostname as per the gitlab CI docs but we can calculate the hostname for the docker host from running the hostname command here and adding the appropriate suffix. See https://gitlab.com/gitlab-org/gitlab-runner/issues/1592#note_20419404 for original post. We add -0 on the end because this is part of a network created by docker compose on a mac. If this doesn't work for you then try removing the -0. Also, note that the docker image doesn't think it's running at this location so the TLS certificates it generates will not be valid. Therefore we disable TLS by setting DOCKER_TLS_CERTDIR to an empty string.
+    # Docker hostname is not available at the docker service name as per the gitlab CI docs but we can calculate the hostname for the docker host from running the hostname command here and adding the appropriate suffix. See https://gitlab.com/gitlab-org/gitlab-runner/issues/1592#note_20419404 for original post. We add -0 on the end because this is part of a network created by docker compose on a mac. If this doesn't work for you then try removing the -0. Also, note that the docker image doesn't think it's running at this location so the TLS certificates it generates will not be valid. Therefore we disable TLS by setting DOCKER_TLS_CERTDIR to an empty string.
     - DOCKER_HOST="tcp://${HOSTNAME}-docker-0:2375"
     - docker build -f src/main/docker/Dockerfile  build/libs 
   dependencies:
     - build:gradle
 
+# Run Testcontainers with docker in docker to spawn a cypress test runner to connect to our running application.
 test:cypress:
   services:
     - name: docker:19.03-dind
